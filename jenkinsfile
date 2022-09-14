@@ -11,14 +11,15 @@ pipeline {
 
         stage('ci') {
             steps {
-              aws s3 cp html-helloworld-$BUILD_NUMBER.zip s3://artifactory-cicd-html/
+             zip -r hello-index-$BUILD_NUMBER.zip *
+             aws s3 cp hello-index-$BUILD_NUMBER.zip s3://sharmila12/
             }
         }
 
         stage('cd') {
             steps {
-               aws s3 cp s3://artifactory-cicd-html/html-helloworld-$PKG.zip .
-               unzip html-helloworld-$PKG.zip
+               aws s3 cp s3://sharmila12/hello-index-$PKG.zip .
+               unzip hello-index-$PKG.zip
                scp index.html root@172.31.15.6:/var/www/html/
             }
         }
