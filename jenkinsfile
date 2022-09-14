@@ -11,7 +11,7 @@ pipeline {
 
         stage('ci') {
             steps {
-                zip -r html-helloworld-$BUILD_NUMBER.zip *
+                zip -r html-helloworld-$BUILD_NUMBER.zip
               aws s3 cp html-helloworld-$BUILD_NUMBER.zip s3://artifactory-cicd-html/
             }
         }
