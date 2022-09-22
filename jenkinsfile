@@ -2,25 +2,24 @@ pipeline {
     agent any
 
     stages {
-        stage('checkout') {
+        stage('list files') {
             steps {
-                git clone url
-
+                sh 'ls -ltra'
             }
         }
-
-        stage('ci') {
+        stage('copy .sh file to target') {
             steps {
-             zip -r hello-index-$BUILD_NUMBER.zip *
-             aws s3 cp hello-index-$BUILD_NUMBER.zip s3://sharmila12/
+                sh 'scp test.sh root@172.31.40.10:/opt/'
             }
         }
-
-        stage('cd') {
+        stage('run script') {
             steps {
-               aws s3 cp s3://sharmila12/hello-index-$PKG.zip .
-               unzip hello-index-$PKG.zip
-               scp index.html root@172.31.15.6:/var/www/html/
+                sh 'ssh root@172.31.40.10 && chmod 755 test.sh && ./test.sh'
+            }
+        }
+        stage('tomcat status') {
+            steps {
+                sh 'ssh root@172.31.40.10 && ps -ef | grep -i "tomcat"'
             }
         }
     }
